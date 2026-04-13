@@ -28,8 +28,10 @@ def generate_with_fallback(contents, models=None, config=None):
                 response = client.models.generate_content(model=model, contents=contents)
             return response
         except Exception as exc:
-            if '429' in str(exc) or 'RESOURCE_EXHAUSTED' in str(exc):
-                print(f"Model {model} quota exceeded, trying next model...")
+            error_str = str(exc)
+            if ('429' in error_str or 'RESOURCE_EXHAUSTED' in error_str or 
+                '503' in error_str or 'UNAVAILABLE' in error_str):
+                print(f"Model {model} unavailable or quota exceeded, trying next model...")
                 continue
             else:
                 raise  # Re-raise non-quota errors
