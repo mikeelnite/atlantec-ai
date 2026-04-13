@@ -1,22 +1,62 @@
 #!/usr/bin/env python
 """Interactive NLP agent CLI for Help Your Gaeltacht."""
 
+import os
 import sys
+from getpass import getpass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
 from help_your_gaeltacht.data_loader import load_custom_town_list
-from help_your_gaeltacht.nlp_agent import process_natural_language_query, search_info
+from help_your_gaeltacht.nlp_agent import (
+    configure_client,
+    process_natural_language_query,
+    search_info,
+    validate_api_key,
+)
 from help_your_gaeltacht.nearest_towns import find_nearest_towns
 from help_your_gaeltacht.glossary import generate_glossary
 from help_your_gaeltacht.poi import find_pubs_near_location
 from help_your_gaeltacht.heritage import query_heritage_assets
-from help_your_gaeltacht.nlp_agent import process_natural_language_query
+
+
+def ensure_gemini_api_key():
+    """Prompt the user for a Gemini API key at startup."""
+    print("A Gemini API key is needed for AI features.")
+    print("Enter your own Gemini API key. It will only be used for this session.\n")
+
+    while True:
+        user_key = getpass("Gemini API key: ").strip()
+        if not user_key:
+            print("Please enter a non-empty API key, or press Ctrl+C to cancel.\n")
+            continue
+
+        is_valid, error_message = validate_api_key(user_key)
+        if not is_valid:
+            print(f"{error_message}\n")
+            continue
+
+        if error_message:
+            print(f"{error_message}\n")
+
+        os.environ["GEMINI_API_KEY"] = user_key
+        configure_client(user_key)
+        print()
+        return
 
 
 def main():
+    try:
+        ensure_gemini_api_key()
+    except KeyboardInterrupt:
+        print("\nNo API key entered. Exiting.")
+        return
+    except Exception as exc:
+        print(f"Unable to configure Gemini: {exc}")
+        return
+
     print("=" * 60)
     print("Help Your Gaeltacht - AI Agent")
     print("=" * 60)

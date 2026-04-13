@@ -21,7 +21,11 @@ python -m pip install -r requirements.txt
 - `datasets/Gaeltacht_Boundaries_Generalised_100m.geojson`
 - `datasets/Settlements_Generalised_100m.geojson`
 
-3. Set your Google Gemini API key (required for AI features):
+3. Bring your own Google Gemini API key for AI features.
+
+When you start the interactive agent, it will securely prompt you to enter your own key for that session if `GEMINI_API_KEY` is not already set.
+
+Optional: you can still set it yourself before running the app.
 
 ```bash
 # On Windows PowerShell:
@@ -31,7 +35,7 @@ $env:GEMINI_API_KEY = "your-api-key-here"
 export GEMINI_API_KEY=your-api-key-here
 ```
 
-Or set it permanently in your system environment variables.
+Do not commit real API keys to this repository or to GitHub.
 
 4. Run the interactive AI agent:
 

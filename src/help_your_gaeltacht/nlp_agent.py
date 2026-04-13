@@ -1,31 +1,93 @@
 """Gemini-based NLP agent to parse natural language queries."""
 
-import os
 import json
+import os
+
 import google.genai as genai
 from google.genai import types
 
 from help_your_gaeltacht.counties import get_county_coords, COUNTY_COORDS
 
-# Configure with API key (use env var for security)
-api_key = os.getenv("GEMINI_API_KEY")
-if not api_key:
-    raise ValueError("GEMINI_API_KEY environment variable not set. Please set it to your Google Gemini API key.")
-client = genai.Client(api_key=api_key)
+client = None
+DEFAULT_MODELS = [
+    "gemini-2.5-flash-lite",
+    "gemini-2.5-flash",
+    "gemini-2.5-pro",
+    "gemini-2.0-flash",
+]
+
+
+def configure_client(api_key=None):
+    """Configure the shared Gemini client."""
+    resolved_api_key = (api_key or os.getenv("GEMINI_API_KEY") or "").strip()
+    if not resolved_api_key:
+        raise ValueError(
+            "No Gemini API key is configured. Set GEMINI_API_KEY or enter your own key when prompted."
+        )
+
+    global client
+    client = genai.Client(api_key=resolved_api_key)
+    return client
+
+
+def validate_api_key(api_key):
+    """Validate a Gemini API key with a lightweight API call."""
+    candidate_key = (api_key or "").strip()
+    if not candidate_key:
+        return False, "Please enter a non-empty API key."
+
+    test_client = genai.Client(api_key=candidate_key)
+
+    try:
+        test_client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents="Reply with OK.",
+        )
+    except Exception as exc:
+        error_text = str(exc)
+        invalid_markers = (
+            "API_KEY_INVALID",
+            "API key not valid",
+            "Please pass a valid API key",
+            "400 INVALID_ARGUMENT",
+        )
+        quota_markers = (
+            "RESOURCE_EXHAUSTED",
+            "429",
+            "quota exceeded",
+            "rate limit",
+        )
+        if any(marker in error_text for marker in invalid_markers):
+            return False, "That Gemini API key is not valid. Please try again."
+        if any(marker.lower() in error_text.lower() for marker in quota_markers):
+            return True, "Gemini key accepted, but this account is currently over quota."
+        return False, f"Could not verify the API key: {exc}"
+
+    return True, None
+
+
+def get_client():
+    """Return the configured Gemini client, creating it on first use."""
+    global client
+    if client is None:
+        client = configure_client()
+    return client
 
 
 def generate_with_fallback(contents, models=None, config=None):
     """Generate content with fallback models on quota errors."""
     if models is None:
-        models = ['gemini-2.5-flash-lite', 'gemini-2.5-flash', 'gemini-2.0-flash']
-    
+        models = DEFAULT_MODELS
+
+    active_client = get_client()
+
     for model in models:
         try:
-            if config:
-                config.model = model
-                response = client.models.generate_content(contents=contents, config=config)
-            else:
-                response = client.models.generate_content(model=model, contents=contents)
+            response = active_client.models.generate_content(
+                model=model,
+                contents=contents,
+                config=config,
+            )
             return response
         except Exception as exc:
             error_str = str(exc)
