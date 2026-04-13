@@ -21,11 +21,30 @@ python -m pip install -r requirements.txt
 - `datasets/Gaeltacht_Boundaries_Generalised_100m.geojson`
 - `datasets/Settlements_Generalised_100m.geojson`
 
-3. Run the CLI:
+3. Set your Google Gemini API key (required for AI features):
 
 ```bash
-python scripts/find_nearest.py --lat 53.2707 --lon -9.0568 --limit 5
+# On Windows PowerShell:
+$env:GEMINI_API_KEY = "your-api-key-here"
+
+# On Linux/macOS:
+export GEMINI_API_KEY=your-api-key-here
 ```
+
+Or set it permanently in your system environment variables.
+
+4. Run the interactive AI agent:
+
+```bash
+python scripts/interactive_agent.py
+```
+
+Try queries like:
+- "Find towns in Galway"
+- "Find volunteer opportunities in Mayo Gaeltacht towns"
+- "Irish language learning resources"
+
+5. Run the CLI:
 
 4. To look up pubs near each returned town:
 

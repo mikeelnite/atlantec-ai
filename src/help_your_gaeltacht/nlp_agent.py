@@ -7,8 +7,10 @@ from google.genai import types
 
 from help_your_gaeltacht.counties import get_county_coords, COUNTY_COORDS
 
-# Configure with API key (use env var if set, otherwise use default)
-api_key = os.getenv("GOOGLE_API_KEY", "your-api-key-here")
+# Configure with API key (use env var for security)
+api_key = os.getenv("GEMINI_API_KEY")
+if not api_key:
+    raise ValueError("GEMINI_API_KEY environment variable not set. Please set it to your Google Gemini API key.")
 client = genai.Client(api_key=api_key)
 
 
