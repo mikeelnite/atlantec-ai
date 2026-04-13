@@ -10,6 +10,3 @@ venv/
 .env.local
 .env.secret
 *.secret
-
-# Local dataset files
-/datasets/
