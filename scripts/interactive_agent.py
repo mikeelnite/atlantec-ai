@@ -118,6 +118,16 @@ def main():
                 for irish, english in glossary.items():
                     print(f"    {irish} = {english}")
 
+            if params["find_volunteers"]:
+                town_names = [town['name'] for town in nearest]
+                search_query = f"volunteer opportunities near {', '.join(town_names)} in {params['county']} county, Ireland"
+                print(f"\n  Searching for volunteer opportunities...\n")
+                try:
+                    volunteer_result = search_info(search_query)
+                    print(f"  Volunteer opportunities: {volunteer_result}\n")
+                except Exception as exc:
+                    print(f"  Volunteer search error: {exc}\n")
+
         except Exception as exc:
             print(f"Agent: Error during search — {exc}\n")
 

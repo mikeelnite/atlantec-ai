@@ -29,8 +29,9 @@ Extract:
 4. FIND_HERITAGE: true/false - should we search for heritage sites? (default false)
 5. PUB_RADIUS: search radius for pubs in meters (default 1000)
 6. HERITAGE_RADIUS: search radius for heritage in km (default 5)
+7. FIND_VOLUNTEERS: true/false - should we search for volunteer opportunities? (default false)
 
-Return JSON: {{"county": "...", "limit": 5, "find_pubs": false, "find_heritage": false, "pub_radius": 1000, "heritage_radius": 5}}
+Return JSON: {{"county": "...", "limit": 5, "find_pubs": false, "find_heritage": false, "pub_radius": 1000, "heritage_radius": 5, "find_volunteers": false}}
 
 If the query is about searching for other information (like volunteers, events, projects, initiatives):
 Return JSON: {{"search_query": "the search term"}}
@@ -100,6 +101,7 @@ def process_natural_language_query(user_input):
         "limit": max(1, min(params.get("limit", 5), 10)),
         "find_pubs": params.get("find_pubs", False),
         "find_heritage": params.get("find_heritage", False),
+        "find_volunteers": params.get("find_volunteers", False),
         "pub_radius": max(500, params.get("pub_radius", 1000)),
         "heritage_radius": max(1, params.get("heritage_radius", 5)),
         "pub_limit": 3,
