@@ -1,65 +1,19 @@
-# Help Your Gaeltacht
+# Atlantec AI Challenge 2026
+**State Machines** - Liam Ó Lionáird, Micael Pereira, Peter Hyland, Miguel Martins
 
-A small Python project to help find the nearest Gaeltacht towns from your location and generate a basic Irish vocabulary glossary.
+## Project: Help Your Gaeltacht
 
-## What it does
+A simple Gemini API-based CLI app that finds Gaeltacht towns in / near your county using open datasets. You can search further for local development projects and volunteering opportunities, and learn new Irish words and placenames.
 
-- Loads Gaeltacht town data from the local GeoJSON file generated in the dataset archive
-- Finds the nearest Gaeltacht towns for a given latitude/longitude
-- Builds a simple Irish-English glossary from town names
+### Our Datasets (found in `datasets` folder)
+* [Gaeltacht Boundaries Generalised 100m](https://data.gov.ie/dataset/gaeltacht-boundaries-generalised-100m-national-administrative-boundaries-20151) (Published by Tailte Éireann, Creative Commons Attribution license)
+* [Settlements Generalised 100m](https://data.gov.ie/dataset/settlements-generalised-100m-national-statistical-boundaries-20151) (Published by Tailte Éireann, Creative Commons Attribution license)
+* `gael_towns.geojson`
+    * Our custom list of Gaeltacht towns generated from the above datasets using the `new_dataset.py` script in the `datasets` folder.
 
-## Setup
+### How to Run:
+Run the `interactive_agent.py` script in the `scripts` folder. The script will prompt you to enter a Gemini API key before launching.
 
-1. Install dependencies:
-
-```bash
-python -m pip install -r requirements.txt
-```
-
-2. The local datasets are already imported under `datasets/`:
-- `datasets/gael_towns.geojson`
-- `datasets/Gaeltacht_Boundaries_Generalised_100m.geojson`
-- `datasets/Settlements_Generalised_100m.geojson`
-
-3. Bring your own Google Gemini API key for AI features.
-
-When you start the interactive agent, it will securely prompt you to enter your own key for that session if `GEMINI_API_KEY` is not already set.
-
-Optional: you can still set it yourself before running the app.
-
-```bash
-# On Windows PowerShell:
-$env:GEMINI_API_KEY = "your-api-key-here"
-
-# On Linux/macOS:
-export GEMINI_API_KEY=your-api-key-here
-```
-
-Do not commit real API keys to this repository or to GitHub.
-
-4. Run the interactive AI agent:
-
-```bash
-python scripts/interactive_agent.py
-```
-
-Try queries like:
-- "Find towns in Galway"
-- "Find volunteer opportunities in Mayo Gaeltacht towns"
-- "Irish language learning resources"
-
-5. Run the CLI:
-
-4. To look up pubs near each returned town:
-
-```bash
-python scripts/find_nearest.py --lat 53.2707 --lon -9.0568 --limit 5 --find-pubs
-```
-
-> Pub lookup uses OpenStreetMap's Overpass API. If one endpoint is busy or rate-limited, the script will try alternate public Overpass endpoints.
-
-## Notes
-
-- The original source archive was imported from `C:\Users\migue\Downloads\atlantec-ai-challenge-main.zip`.
-- To regenerate `gael_towns.geojson`, run `scripts/new_dataset.py` from the local dataset folder after installing `geopandas`.
-- If you want to query remote ArcGIS GeoService endpoints instead of local files, update `src/help_your_gaeltacht/data_loader.py`.
+* Type an Irish county name to search for Gaeltacht towns in or near that county.
+* The agent will search for pubs and heritage sites in each town using OpenStreetMap if requested.
+* If asked about volunteering work, the agent will run a Gemini API query for guidance on nearby opportunities.
