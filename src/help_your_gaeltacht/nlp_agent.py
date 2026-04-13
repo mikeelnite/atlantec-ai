@@ -3,6 +3,7 @@
 import os
 import json
 import google.genai as genai
+from google.genai import types
 
 from help_your_gaeltacht.counties import get_county_coords, COUNTY_COORDS
 
@@ -16,11 +17,12 @@ def parse_query(user_input):
     
     county_options = ", ".join(sorted(set(v.split()[0] for v in COUNTY_COORDS.keys())))
     
-    prompt = f"""You are a helpful assistant parsing queries about Irish Gaeltacht towns, pubs, and heritage sites.
+    prompt = f"""You are a helpful assistant for Irish Gaeltacht information.
 
+If the query is about finding Gaeltacht towns:
 Available Irish counties: {county_options}
 
-Parse this user query and extract:
+Extract:
 1. COUNTY: The Irish county name (must be from the available list above)
 2. LIMIT: Number of towns to find (default 5)
 3. FIND_PUBS: true/false - should we search for pubs? (default false)
@@ -28,10 +30,14 @@ Parse this user query and extract:
 5. PUB_RADIUS: search radius for pubs in meters (default 1000)
 6. HERITAGE_RADIUS: search radius for heritage in km (default 5)
 
+Return JSON: {{"county": "...", "limit": 5, "find_pubs": false, "find_heritage": false, "pub_radius": 1000, "heritage_radius": 5}}
+
+If the query is about searching for other information (like volunteers, events, projects, initiatives):
+Return JSON: {{"search_query": "the search term"}}
+
 User query: "{user_input}"
 
-Return ONLY a JSON object with these keys, nothing else:
-{{"county": "...", "limit": 5, "find_pubs": false, "find_heritage": false, "pub_radius": 1000, "heritage_radius": 5}}
+Return ONLY the JSON object, nothing else.
 """
     
     response = client.models.generate_content(model='gemini-2.5-flash-lite', contents=prompt)
@@ -51,6 +57,22 @@ Return ONLY a JSON object with these keys, nothing else:
     return result
 
 
+def search_info(query):
+    """Use Gemini with Google Search to find information."""
+    tools = [types.Tool(google_search=types.GoogleSearch())]
+    config = types.GenerateContentConfig(tools=tools)
+    
+    search_prompt = f"Search the web for '{query}' and provide relevant, up-to-date information. Focus on Irish/Gaeltacht context if applicable. Summarize key findings."
+    
+    response = client.models.generate_content(
+        model='gemini-2.5-flash-lite',
+        contents=search_prompt,
+        config=config
+    )
+    
+    return response.candidates[0].content.parts[0].text.strip()
+
+
 def process_natural_language_query(user_input):
     """Process a natural language query and return execution parameters."""
     try:
@@ -58,9 +80,13 @@ def process_natural_language_query(user_input):
     except Exception as exc:
         return {"error": f"Failed to parse query: {exc}"}
     
-    # Validate county
+    # Check if it's a search query
+    if "search_query" in params and params["search_query"]:
+        return {"search_query": params["search_query"]}
+    
+    # Validate county for town search
     if not params.get("county"):
-        return {"error": "No county found in query. Please mention an Irish county."}
+        return {"error": "No county found in query. Please mention an Irish county, like 'Galway' or 'Cork'."}
     
     try:
         lat, lon = get_county_coords(params["county"])

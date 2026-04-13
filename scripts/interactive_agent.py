@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
 from help_your_gaeltacht.data_loader import load_custom_town_list
+from help_your_gaeltacht.nlp_agent import process_natural_language_query, search_info
 from help_your_gaeltacht.nearest_towns import find_nearest_towns
 from help_your_gaeltacht.glossary import generate_glossary
 from help_your_gaeltacht.poi import find_pubs_near_location
@@ -50,7 +51,16 @@ def main():
             print(f"Agent: Error — {params['error']}\n")
             continue
 
-        # Execute search
+        if "search_query" in params:
+            print(f"Agent: Searching for '{params['search_query']}'...\n")
+            try:
+                search_result = search_info(params['search_query'])
+                print(f"Search results: {search_result}\n")
+            except Exception as exc:
+                print(f"Agent: Error during search: {exc}\n")
+            continue
+
+        # Execute town search
         try:
             nearest = find_nearest_towns(
                 features,
