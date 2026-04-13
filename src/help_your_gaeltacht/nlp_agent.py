@@ -12,6 +12,29 @@ api_key = os.getenv("GOOGLE_API_KEY", "your-api-key-here")
 client = genai.Client(api_key=api_key)
 
 
+def generate_with_fallback(contents, models=None, config=None):
+    """Generate content with fallback models on quota errors."""
+    if models is None:
+        models = ['gemini-2.5-flash-lite', 'gemini-2.5-flash', 'gemini-2.0-flash']
+    
+    for model in models:
+        try:
+            if config:
+                config.model = model
+                response = client.models.generate_content(contents=contents, config=config)
+            else:
+                response = client.models.generate_content(model=model, contents=contents)
+            return response
+        except Exception as exc:
+            if '429' in str(exc) or 'RESOURCE_EXHAUSTED' in str(exc):
+                print(f"Model {model} quota exceeded, trying next model...")
+                continue
+            else:
+                raise  # Re-raise non-quota errors
+    
+    raise Exception("All models have quota exceeded. Please try again later.")
+
+
 def parse_query(user_input):
     """Use Gemini to parse natural language query and extract parameters."""
     
@@ -41,7 +64,7 @@ User query: "{user_input}"
 Return ONLY the JSON object, nothing else.
 """
     
-    response = client.models.generate_content(model='gemini-2.5-flash-lite', contents=prompt)
+    response = generate_with_fallback(prompt)
     response_text = response.candidates[0].content.parts[0].text.strip()
     
     # Extract JSON from response
@@ -65,11 +88,7 @@ def search_info(query):
     
     search_prompt = f"Search the web for '{query}' and provide relevant, up-to-date information. Focus on Irish/Gaeltacht context if applicable. Summarize key findings."
     
-    response = client.models.generate_content(
-        model='gemini-2.5-flash-lite',
-        contents=search_prompt,
-        config=config
-    )
+    response = generate_with_fallback(contents=search_prompt, config=config)
     
     return response.candidates[0].content.parts[0].text.strip()
 
