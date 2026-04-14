@@ -1,6 +1,8 @@
 # Atlantec AI Challenge 2026
 **State Machines** - Liam O Lionaird, Micael Pereira, Peter Hyland, Miguel Martins
 
+**Note:** This is a fork of our original repo at [liam-ol/atlantec-ai-challenge](https://github.com/liam-ol/atlantec-ai-challenge), additional Git history can be viewed there.
+
 ## Project: Help Your Gaeltacht
 
 A simple Gemini API-based app that finds Gaeltacht towns in or near your county using open datasets. You can search further for local places of interest and volunteering opportunities, and learn new Irish words and placenames.
