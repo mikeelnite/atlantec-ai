@@ -93,9 +93,14 @@ def main():
                     print(f"  No heritage assets found within {args.heritage_radius} km")
 
     glossary = generate_glossary(nearest)
-    if glossary:
-        print("\nIrish glossary from nearby town names:")
-        for irish, english in glossary.items():
+    if glossary.get("terms"):
+        print("\nIrish words from nearby town names:")
+        for irish, english in glossary["terms"]:
+            print(f"- {irish}: {english}")
+
+    if glossary.get("expressions"):
+        print("\nUseful Irish expressions:")
+        for irish, english in glossary["expressions"]:
             print(f"- {irish}: {english}")
 
 

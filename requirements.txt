@@ -1,3 +1,4 @@
 requests
 geopandas
 google-genai
+PySide6

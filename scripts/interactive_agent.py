@@ -163,9 +163,14 @@ def main():
                         print(f"    Heritage search: {exc}")
 
             glossary = generate_glossary(nearest)
-            if glossary:
-                print(f"\n  Irish words to learn:")
-                for irish, english in glossary.items():
+            if glossary.get("terms"):
+                print("\n  Irish words from these place names:")
+                for irish, english in glossary["terms"]:
+                    print(f"    {irish} = {english}")
+
+            if glossary.get("expressions"):
+                print("\n  Useful Irish expressions:")
+                for irish, english in glossary["expressions"]:
                     print(f"    {irish} = {english}")
 
             if params["find_volunteers"]:

@@ -1,13 +1,13 @@
 # Atlantec AI Challenge 2026
-**State Machines** - Liam Ó Lionáird, Micael Pereira, Peter Hyland, Miguel Martins
+**State Machines** - Liam O Lionaird, Micael Pereira, Peter Hyland, Miguel Martins
 
 ## Project: Help Your Gaeltacht
 
 A simple Gemini API-based CLI / Qt app that finds Gaeltacht towns in or near your county using open datasets. You can search further for local development projects and volunteering opportunities, and learn new Irish words and placenames.
 
 ### Our Datasets (found in `datasets` folder)
-* [Gaeltacht Boundaries Generalised 100m](https://data.gov.ie/dataset/gaeltacht-boundaries-generalised-100m-national-administrative-boundaries-20151) (Published by Tailte Éireann, Creative Commons Attribution license)
-* [Settlements Generalised 100m](https://data.gov.ie/dataset/settlements-generalised-100m-national-statistical-boundaries-20151) (Published by Tailte Éireann, Creative Commons Attribution license)
+* [Gaeltacht Boundaries Generalised 100m](https://data.gov.ie/dataset/gaeltacht-boundaries-generalised-100m-national-administrative-boundaries-20151) (Published by Tailte Eireann, Creative Commons Attribution license)
+* [Settlements Generalised 100m](https://data.gov.ie/dataset/settlements-generalised-100m-national-statistical-boundaries-20151) (Published by Tailte Eireann, Creative Commons Attribution license)
 * `gael_towns.geojson`
     * Our custom list of Gaeltacht towns calculated from the above datasets using the `new_dataset.py` script in the `datasets` folder.
 

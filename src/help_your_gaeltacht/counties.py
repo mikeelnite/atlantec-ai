@@ -38,6 +38,8 @@ COUNTY_COORDS = {
 def get_county_coords(county_name):
     """Look up approximate center coordinates for an Irish county."""
     normalized = county_name.strip().lower()
+    if normalized.startswith("county "):
+        normalized = normalized[len("county "):].strip()
     if normalized in COUNTY_COORDS:
         return COUNTY_COORDS[normalized]
     raise ValueError(
