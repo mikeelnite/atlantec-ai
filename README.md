@@ -3,7 +3,9 @@
 
 ## Project: Help Your Gaeltacht
 
-A simple Gemini API-based CLI / Qt app that finds Gaeltacht towns in or near your county using open datasets. You can search further for local development projects and volunteering opportunities, and learn new Irish words and placenames.
+A simple Gemini API-based app that finds Gaeltacht towns in or near your county using open datasets. You can search further for local development projects and volunteering opportunities, and learn new Irish words and placenames.
+
+To suit the needs of every user, a variety of UI frontends are available: a command-line interface, a Qt desktop app, and a web app.
 
 ### Our Datasets (found in `datasets` folder)
 * [Gaeltacht Boundaries Generalised 100m](https://data.gov.ie/dataset/gaeltacht-boundaries-generalised-100m-national-administrative-boundaries-20151) (Published by Tailte Eireann, Creative Commons Attribution license)
@@ -12,12 +14,18 @@ A simple Gemini API-based CLI / Qt app that finds Gaeltacht towns in or near you
     * Our custom list of Gaeltacht towns calculated from the above datasets using the `new_dataset.py` script in the `datasets` folder.
 
 ### How to Run:
-Run the `interactive_agent.py` script in the `scripts` folder. The script will prompt you to enter a Gemini API key before launching.
+Ensure all Python libraries in `requirements.py` are installed.
 
-Alternatively, you can try an experimental Qt GUI version of the app by running `qt_app.py` in the `scripts` folder.
+1. **CLI:** Run the `interactive_agent.py` script in the `scripts` folder. The script will prompt you to enter a Gemini API key before launching.
+
+2. **Qt GUI:** Run `qt_app.py` in the `scripts` folder.
+
+3. **Web App:** Follow instructions in the `webapp` folder's `README` to host the web app locally.
+
+Once you're up and running:
 
 * Type an Irish county name to search for Gaeltacht towns in or near that county.
 * The agent will search for pubs and heritage sites in each town using OpenStreetMap if requested.
 * If asked about volunteering work, the agent will run a Gemini API query for guidance on nearby opportunities.
 
-This app was partially created using ChatGPT Codex.
+This app was created with coding assistance from ChatGPT Codex and Bolt.
