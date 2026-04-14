@@ -16,7 +16,7 @@ To suit the needs of every user, a variety of UI frontends are available: a comm
     * Our custom list of Gaeltacht towns calculated from the above datasets using the `new_dataset.py` script in the `datasets` folder.
 
 ### How to Run:
-Ensure all Python libraries in `requirements.txt` are installed.
+Ensure all Python libraries in `requirements.txt` are installed. The underlying NLP agent code for all implementations can be found in the `src/help-your-gaeltacht` folder.
 
 1. **CLI:** Run the `interactive_agent.py` script in the `scripts` folder. The script will prompt you to enter a Gemini API key before launching.
 
