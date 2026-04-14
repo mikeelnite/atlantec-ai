@@ -3,7 +3,7 @@
 
 ## Project: Help Your Gaeltacht
 
-A simple Gemini API-based app that finds Gaeltacht towns in or near your county using open datasets. You can search further for local development projects and volunteering opportunities, and learn new Irish words and placenames.
+A simple Gemini API-based app that finds Gaeltacht towns in or near your county using open datasets. You can search further for local places of interest and volunteering opportunities, and learn new Irish words and placenames.
 
 To suit the needs of every user, a variety of UI frontends are available: a command-line interface, a Qt desktop app, and a web app.
 
